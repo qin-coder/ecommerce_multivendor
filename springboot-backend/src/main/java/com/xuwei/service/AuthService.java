@@ -1,4 +1,7 @@
 package com.xuwei.service;
 
-public class AuthService {
+import com.xuwei.response.SignupRequest;
+
+public interface AuthService {
+    String createUser(SignupRequest signupRequest);
 }

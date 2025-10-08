@@ -1,8 +1,10 @@
 package com.xuwei.controller;
 
-import com.xuwei.model.User;
+import com.xuwei.domain.USER_ROLE;
 import com.xuwei.repository.UserRepository;
+import com.xuwei.response.AuthResponse;
 import com.xuwei.response.SignupRequest;
+import com.xuwei.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserRepository userRepository;
+    private final AuthService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> createUserHandler(@RequestBody SignupRequest signupRequest) {
-        User user = new User();
-        user.setEmail(signupRequest.getEmail());
-        user.setFullName(signupRequest.getFullName());
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.ok(savedUser);
+    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody SignupRequest signupRequest) {
+        String token = userService.createUser(signupRequest);
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setJwt(token);
+        authResponse.setMessage("User created successfully");
+        authResponse.setRole(USER_ROLE.ROLE_CUSTOMER);
+        return ResponseEntity.ok(authResponse);
     }
 }
