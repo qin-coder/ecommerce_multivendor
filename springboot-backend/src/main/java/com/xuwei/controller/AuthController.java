@@ -2,10 +2,10 @@ package com.xuwei.controller;
 
 import com.xuwei.domain.USER_ROLE;
 import com.xuwei.model.VerificationCode;
-import com.xuwei.repository.UserRepository;
+import com.xuwei.request.LoginRequest;
 import com.xuwei.response.ApiResponse;
 import com.xuwei.response.AuthResponse;
-import com.xuwei.response.SignupRequest;
+import com.xuwei.request.SignupRequest;
 import com.xuwei.service.AuthService;
 import jakarta.mail.MessagingException;
 import jdk.jshell.spi.ExecutionControl;
@@ -42,5 +42,13 @@ public class AuthController {
         authResponse.setMessage("User created successfully");
         authResponse.setRole(USER_ROLE.ROLE_CUSTOMER);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @PostMapping("/signing")
+    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest loginRequest) throws Exception {
+
+        AuthResponse authResponse = authService.signing(loginRequest);
+        authResponse.setMessage("Login successful");
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 }

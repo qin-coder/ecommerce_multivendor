@@ -1,4 +1,4 @@
-package com.xuwei.response;
+package com.xuwei.request;
 
 import lombok.Data;
 
@@ -7,4 +7,5 @@ public class SignupRequest {
     private String email;
     private String fullName;
     private String otp;
+
 }
