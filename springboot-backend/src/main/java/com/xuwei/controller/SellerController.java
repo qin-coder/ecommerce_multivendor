@@ -151,6 +151,46 @@ public class SellerController {
                 null, userDetails.getAuthorities());
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<Seller> getSellerByJwt(
+            @RequestHeader("Authorization") String jwt) throws Exception {
+        String email = jwtProvider.getEmailFromJwtToken(jwt);
+        Seller seller = sellerService.getSellerByEmail(email);
+        return new ResponseEntity<>(seller, HttpStatus.OK);
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Seller> getSellerById(@PathVariable Long id) throws Exception {
+        Seller seller = sellerService.getSellerById(id);
+        return new ResponseEntity<>(seller, HttpStatus.OK);
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<Seller>> getAllSellers(
+            @RequestParam(required = false) AccountStatus status) {
+        List<Seller> sellers = sellerService.getAllSellers(status);
+        return ResponseEntity.ok(sellers);
+    }
+
+    @PatchMapping()
+    public ResponseEntity<Seller> updateSeller(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody Seller seller) throws Exception {
+
+        Seller profile = sellerService.getSellerProfile(jwt);
+        Seller updatedSeller =
+                sellerService.updateSeller(profile.getId(), seller);
+        return ResponseEntity.ok(updatedSeller);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSeller(@PathVariable Long id) throws Exception {
+
+        sellerService.deleteSeller(id);
+        return ResponseEntity.noContent().build();
+
+    }
 
 }
