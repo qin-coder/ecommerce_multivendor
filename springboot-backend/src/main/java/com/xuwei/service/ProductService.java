@@ -14,6 +14,7 @@ public interface ProductService {
     Product updateProduct(Long productId , Product product);
     Product getProductById(Long productId) throws ProductException;
 
+
     List<Product> searchProducts(String query);
 
     Page<Product> getAllProducts(

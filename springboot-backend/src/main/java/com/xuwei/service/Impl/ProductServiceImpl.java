@@ -101,6 +101,8 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ProductException("Product not found"));
     }
 
+
+
     @Override
     public List<Product> searchProducts(String query) {
         return productRepository.searchProducts(query);
