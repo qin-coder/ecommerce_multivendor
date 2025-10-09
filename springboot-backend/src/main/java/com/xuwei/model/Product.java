@@ -21,7 +21,7 @@ public class Product {
     private String description;
     private int mrpPrice;
     private int sellingPrice;
-    private int discountPrice;
+    private int discountPercent;
     private int quantity;
     private String color;
 

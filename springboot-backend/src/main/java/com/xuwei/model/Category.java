@@ -17,5 +17,5 @@ public class Category {
     @ManyToOne
     private Category percentCategory;
     @NotNull
-    private Integer percent;
+    private Integer level;
 }
