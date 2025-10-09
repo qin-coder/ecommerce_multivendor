@@ -64,6 +64,22 @@ public class SellerController {
         return new ResponseEntity<>(savedSeller, HttpStatus.CREATED);
     }
 
+    @PatchMapping("/verify/{otp}")
+    public ResponseEntity<Seller> verifySellerEmail(@PathVariable String otp) throws Exception {
+
+
+        VerificationCode verificationCode =
+                verificationCodeRepository.findByOtp(otp);
+
+        if (verificationCode == null || !verificationCode.getOtp().equals(otp)) {
+            throw new Exception("wrong otp...");
+        }
+
+        Seller seller =
+                sellerService.verifyEmail(verificationCode.getEmail(), otp);
+
+        return new ResponseEntity<>(seller, HttpStatus.OK);
+    }
 
 
 
