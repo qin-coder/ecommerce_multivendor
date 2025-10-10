@@ -2,10 +2,7 @@ package com.xuwei.controller;
 
 import com.xuwei.exception.ProductException;
 import com.xuwei.model.Product;
-import com.xuwei.model.Seller;
-import com.xuwei.request.CreateProductRequest;
 import com.xuwei.service.ProductService;
-import com.xuwei.service.SellerService; // 使用SellerService
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

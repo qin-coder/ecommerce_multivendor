@@ -56,18 +56,23 @@ public class ProductServiceImpl implements ProductService {
     /**
      *  Utility method: Ensure category exists or create a new one.
      */
-    private Category ensureCategoryExists(String categoryId, int level, Category parent) {
-        if (categoryId == null || categoryId.isEmpty()) return null;
+    private Category ensureCategoryExists(String name, int level, Category parent) {
+        if (name == null || name.isBlank()) return null;
 
-        Category category = categoryRepository.findByCategoryId(categoryId);
-        if (category == null) {
-            Category newCategory = new Category();
-            newCategory.setCategoryId(categoryId);
-            newCategory.setLevel(level);
-            newCategory.setPercentCategory(parent);
-            category = categoryRepository.save(newCategory);
+        String generatedId = generateCategoryId(name, parent);
+
+        Category existing = categoryRepository.findByCategoryId(generatedId);
+        if (existing != null) {
+            return existing;
         }
-        return category;
+
+        Category newCategory = new Category();
+        newCategory.setName(name);
+        newCategory.setCategoryId(generatedId);
+        newCategory.setParentCategory(parent);
+        newCategory.setLevel(level);
+
+        return categoryRepository.save(newCategory);
     }
 
     /**
@@ -88,12 +93,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long productId, Product product) {
-        //  Ensure product exists before updating
-        productRepository.findById(productId);
-        product.setId(productId);
-        return productRepository.save(product);
+    public Product updateProduct(Long productId, CreateProductRequest request, Seller seller) throws ProductException {
+        Product existing = getProductById(productId);
+
+        existing.setTitle(request.getTitle());
+        existing.setDescription(request.getDescription());
+        existing.setMrpPrice(request.getMrpPrice());
+        existing.setSellingPrice(request.getSellingPrice());
+        existing.setColor(request.getColor());
+        existing.setImages(request.getImages());
+        existing.setSizes(request.getSizes());
+        existing.setDiscountPercent(calculateDiscountPercentage(request.getMrpPrice(), request.getSellingPrice()));
+
+        if (request.getCategory() != null) {
+            Category category = ensureCategoryExists(request.getCategory(), 1, null);
+            Category subCategory = ensureCategoryExists(request.getSubCategory(), 2, category);
+            Category subSubCategory = ensureCategoryExists(request.getSubSubCategory(), 3, subCategory);
+            existing.setCategory(subSubCategory);
+        }
+
+        existing.setSeller(seller);
+
+        return productRepository.save(existing);
     }
+
 
     @Override
     public Product getProductById(Long productId) throws ProductException {
@@ -178,6 +201,14 @@ public class ProductServiceImpl implements ProductService {
             case "price_high" -> PageRequest.of(page, 10, Sort.by("sellingPrice").descending());
             default -> PageRequest.of(page, 10, Sort.unsorted());
         };
+    }
+
+    private String generateCategoryId(String name, Category parent) {
+        String baseId = name.toLowerCase().replaceAll("\\s+", "_");
+        if (parent != null && parent.getCategoryId() != null) {
+            return parent.getCategoryId() + "_" + baseId;
+        }
+        return baseId;
     }
 
     @Override

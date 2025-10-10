@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProductService {
     Product createProduct(CreateProductRequest request , Seller seller);
     void deleteProduct(Long productId) throws ProductException;
-    Product updateProduct(Long productId , Product product);
+    Product updateProduct(Long productId, CreateProductRequest request, Seller seller) throws ProductException;
     Product getProductById(Long productId) throws ProductException;
 
 
