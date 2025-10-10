@@ -1,5 +1,6 @@
 package com.xuwei.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +19,10 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToOne
+    @JsonIgnore
     private User user;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
     private Set<CartItem> cartItems = new HashSet<>();
     private double totalSellingPrice;
     private int totalItems;

@@ -1,6 +1,7 @@
 package com.xuwei.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,18 +15,18 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @ManyToOne
-    @JsonIgnore
+    @JsonIgnoreProperties({"cartItems", "user"})
     private Cart cart;
+
     @ManyToOne
+    @JsonIgnoreProperties({"category", "seller", "reviews"})
     private Product product;
 
     private String size;
-
-    private int quantity = 1;
-
+    private int quantity;
     private Integer mrpPrice;
     private Integer sellingPrice;
     private Long userId;
-
 }

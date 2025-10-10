@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
      */
     public static int calculateDiscountPercentage(double mrpPrice, double sellingPrice) {
         if (mrpPrice <= 0) {
-            throw new IllegalArgumentException("Actual price must be greater than zero.");
+            return 0;
         }
         double discount = mrpPrice - sellingPrice;
         return (int) ((discount / mrpPrice) * 100);
